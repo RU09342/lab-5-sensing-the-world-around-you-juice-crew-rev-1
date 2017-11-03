@@ -54,8 +54,6 @@ int main(void){
 
     WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
 
-    //Timer set up
-
     // uart set up
     P4SEL = BIT4+BIT5; // P3.4,5 = USCI_A0 TXD/RXD
     UCA1CTL1 |= UCSWRST; // **Put state machine in reset**
@@ -65,20 +63,34 @@ int main(void){
     UCA1MCTL = UCBRS_0 + UCBRF_13 + UCOS16; // Modln UCBRSx=0, UCBRFx=0,
     // over sampling
     UCA1CTL1 &= ~UCSWRST; // **Initialize USCI state machine**
-    while(1){
-    // uart tx
+
+    //Timer set up
+    TA0CTL= ( MC_1  + TASSEL_1 + ID_3);             //up timer, smclk, div 8
+
+    TA0CCTL0 = (CCIE);
+    TA0CCR0= 4000;        // sets maximum timer value
+
+    _BIS_SR(CPUOFF + GIE);        // Enter LPM0 w/ interrupt
+
+}
+#pragma vector=TIMER0_A0_VECTOR
+__interrupt void Timer0_A0_ISR (void){
+
     while (!(UCA1IFG&UCTXIFG));             // USCI_A0 TX buffer ready?
        UCA1TXBUF = readTemp();                  // TX -> RXed character
-    }
+
+    TA0CCTL0 &=~BIT0;    //clears flags
 }
 
 unsigned int readTemp(void){
+
+    // ADC Init
     REFCTL0 &= ~REFMSTR;
     P6SEL |= BIT2;
     ADC12CTL0 = ADC12SHT0_9+ADC12ON;
     ADC12CTL1 = ADC12SHP+ADC12CSTARTADD_2;
     ADC12MCTL2 = ADC12INCH_2;
-    ADC12CTL0 |= ADC12SC+ADC12ENC;
+    ADC12CTL0 |= ADC12SC+ADC12ENC;      // start conversion
     while(ADC12CTL1 & ADC12BUSY);
     __no_operation();
 
