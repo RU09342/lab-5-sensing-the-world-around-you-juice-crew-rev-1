@@ -1,3 +1,5 @@
-Hardware Designs
+#Hardware Designs
+This lab an Analog Digital Converter to read from a sensor. The sensors, a photoresistor and phototransistor, used special hardware to change their outputs to a corrosponding voltage. The photo resistor changed its resistance based on light. To create a corrosponding voltage from this sensor, a voltage divider circuit was created. This can be seen in the simulation below
 ![alt text](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Sensors%20and%20Signal%20Conditioning/SimPhotos/PhotoresistorSim.JPG)
+This simulation shows both the circuit diagram and a typical output voltage. The during testing, the photoresistor 
 ![alt text](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Sensors%20and%20Signal%20Conditioning/SimPhotos/Phototransistor.JPG)
