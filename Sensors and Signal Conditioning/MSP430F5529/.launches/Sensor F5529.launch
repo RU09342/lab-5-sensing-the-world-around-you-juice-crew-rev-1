@@ -5,7 +5,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.TI MSP430 USB1/MSP430" value="${build_artifact:Sensor F5529}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.TI MSP430 USB1/MSP430" value="Sensor F5529"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:Sensor F5529}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.TI MSP430 USB1/MSP430" value="C:/Users\IceCreamMachine\Google Drive\Rowan\2017.9 Fall - junior\Embeded\Git Hub\lab-5-sensing-the-world-around-you-juice-crew-rev-1\Sensors and Signal Conditioning\MSP430F5529\Debug\Sensor F5529.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.TI MSP430 USB1/MSP430" value="D:/Programs\Google Drive\2017 Fall (Junior 1)\Embedded Systems\GIT\lab-5-sensing-the-world-around-you-juice-crew-rev-1\Sensors and Signal Conditioning\MSP430F5529\Debug\Sensor F5529.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/Sensor F5529"/>
 </listAttribute>
