@@ -1,7 +1,7 @@
 ******************************************************************************
                   MSP430 Linker PC v16.9.3                     
 ******************************************************************************
->> Linked Thu Nov 02 19:56:34 2017
+>> Linked Wed Nov 15 14:22:01 2017
 
 OUTPUT FILE NAME:   <Sensor F5529.out>
 ENTRY POINT SYMBOL: "_c_int00_noinit_noargs_noexit"  address: 00004418
@@ -85,7 +85,7 @@ MEMORY CONFIGURATION
   INT61                 0000fffa   00000002  00000002  00000000  RWIX
   INT62                 0000fffc   00000002  00000002  00000000  RWIX
   RESET                 0000fffe   00000002  00000002  00000000  RWIX
-  FLASH2                00010000   00014400  00000084  0001437c  RWIX
+  FLASH2                00010000   00014400  00000082  0001437e  RWIX
 
 
 SECTION ALLOCATION MAP
@@ -187,22 +187,22 @@ SYSNMI     0    0000fffc    00000002
 .reset     0    0000fffe    00000002     
                   0000fffe    00000002     rts430x_lc_rd_eabi.lib : boot.obj (.reset)
 
-.text      0    00010000    00000084     
+.text      0    00010000    00000082     
                   00010000    00000048     main.obj (.text:main)
-                  00010048    00000032     main.obj (.text:readTemp)
-                  0001007a    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
-                  00010080    00000004                            : pre_init.obj (.text:_system_pre_init)
+                  00010048    00000030     main.obj (.text:readTemp)
+                  00010078    00000006     rts430x_lc_rd_eabi.lib : exit.obj (.text:abort)
+                  0001007e    00000004                            : pre_init.obj (.text:_system_pre_init)
 
 MODULE SUMMARY
 
        Module             code   ro data   rw data
        ------             ----   -------   -------
     .\
-       main.obj           146    2         0      
+       main.obj           144    2         0      
     +--+------------------+------+---------+---------+
-       Total:             146    2         0      
+       Total:             144    2         0      
                                                   
-    C:\Program Files\ccsv7\tools\compiler\ti-cgt-msp430_16.9.3.LTS\lib\rts430x_lc_rd_eabi.lib
+    D:\Programs\ti\ccsv7\tools\compiler\ti-cgt-msp430_16.9.3.LTS\lib\rts430x_lc_rd_eabi.lib
        boot_special.obj   18     0         0      
        isr_trap.obj       8      0         0      
        exit.obj           6      0         0      
@@ -234,7 +234,7 @@ MODULE SUMMARY
                                                   
        Stack:             0      0         160    
     +--+------------------+------+---------+---------+
-       Grand Total:       182    46        160    
+       Grand Total:       180    46        160    
 
 
 GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
@@ -323,7 +323,7 @@ address   name
 00000732  ADC12MEM9                    
 00000733  ADC12MEM9_H                  
 00000732  ADC12MEM9_L                  
-0001007a  C$$EXIT                      
+00010078  C$$EXIT                      
 000008c0  CBCTL0                       
 000008c1  CBCTL0_H                     
 000008c0  CBCTL0_L                     
@@ -1023,8 +1023,8 @@ ffffffff  __c_args__
 00004418  _c_int00_noinit_noargs_noexit
 0000fffe  _reset_vector                
 00004360  _stack                       
-00010080  _system_pre_init             
-0001007a  abort                        
+0001007e  _system_pre_init             
+00010078  abort                        
 00010000  main                         
 00010048  readTemp                     
 
@@ -1812,9 +1812,9 @@ address   name
 0000fffe  _reset_vector                
 00010000  main                         
 00010048  readTemp                     
-0001007a  C$$EXIT                      
-0001007a  abort                        
-00010080  _system_pre_init             
+00010078  C$$EXIT                      
+00010078  abort                        
+0001007e  _system_pre_init             
 ffffffff  __TI_pprof_out_hndl          
 ffffffff  __TI_prof_data_size          
 ffffffff  __TI_prof_data_start         

@@ -1,5 +1,5 @@
 /* --COPYRIGHT--,BSD_EX
- * Copyright (c) 2014, Texas Instruments Incorporated
+ * Copyright (c) 2012, Texas Instruments Incorporated
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,58 +42,52 @@
  * for an API functional library-approach to peripheral configuration.
  *
  * --/COPYRIGHT--*/
-//******************************************************************************
+#include <msp430.h>
 
-#include <msp430.h> 
+unsigned int readTemp(void){
+    return ((ADC10MEM >> 2) & 0xFFF);//shift adc value to make it 8 bits
+}
+int main(void)
+{
+  WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
+  if (CALBC1_1MHZ==0xFF)                    // If calibration constant erased
+  {
+    while(1);                               // do not load, trap CPU!!
+  }
+  DCOCTL = 0;                               // Select lowest DCOx and MODx settings
+  BCSCTL1 = CALBC1_1MHZ;                    // Set DCO
+  DCOCTL = CALDCO_1MHZ;
+  P1SEL = BIT1 + BIT2 ;                     // P1.1 = RXD, P1.2=TXD
+  P1SEL2 = BIT1 + BIT2 ;                    // P1.1 = RXD, P1.2=TXD
+  UCA0CTL1 |= UCSSEL_2;                     // SMCLK
+  UCA0BR0 = 104;                            // 1MHz 9600
+  UCA0BR1 = 0;                              // 1MHz 9600
+  UCA0MCTL = UCBRS0;                        // Modulation UCBRSx = 1
+  UCA0CTL1 &= ~UCSWRST;                     // **Initialize USCI state machine**
+  IE2 |= UCA0RXIE;                          // Enable USCI_A0 RX interrupt
 
+  //Timer set up
+  TA0CTL= ( MC_1  + TASSEL_2 + ID_3);             //up timer, smclk, div 8
+  TA0CCTL0 = (CCIE);
+  TA0CCR0= 62500;        // sets maximum timer value
 
+  //initialize ADC
+      ADC10CTL0 = ADC10SHT_2 + ADC10ON; // 0 to 3.3 ref, ADC10ON
+      ADC10CTL1 = INCH_4 + CONSEQ_2+ADC10SSEL_0+ADC10SSEL_1; // input A4, repeat single channel, smclk
+      ADC10AE0|=BIT4;//set adc to P1.4
+      ADC10CTL0 |= ENC + ADC10SC; // Sampling and conversion start
 
-unsigned int readTemp(void);
-
-int main(void){
-
-    WDTCTL = WDTPW + WDTHOLD;                 // Stop WDT
-
-    // uart set up
-    P4SEL = BIT4+BIT5; // P3.4,5 = USCI_A0 TXD/RXD
-    UCA1CTL1 |= UCSWRST; // **Put state machine in reset**
-    UCA1CTL1 |= UCSSEL_2; // SMCLK
-    UCA1BR0 = 6; // 1MHz 9600 (see User's Guide)
-    UCA1BR1 = 0; // 1MHz 9600
-    UCA1MCTL = UCBRS_0 + UCBRF_13 + UCOS16; // Modln UCBRSx=0, UCBRFx=0,
-    // over sampling
-    UCA1CTL1 &= ~UCSWRST; // **Initialize USCI state machine**
-
-    //Timer set up
-    TA0CTL= ( MC_1  + TASSEL_1 + ID_3);             //up timer, smclk, div 8
-
-    TA0CCTL0 = (CCIE);
-    TA0CCR0= 4000;        // sets maximum timer value
-
-    _BIS_SR(CPUOFF + GIE);        // Enter LPM0 w/ interrupt
-
+  __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0, interrupts enabled
 }
 #pragma vector=TIMER0_A0_VECTOR
 __interrupt void Timer0_A0_ISR (void){
-
-    while (!(UCA1IFG&UCTXIFG));             // USCI_A0 TX buffer ready?
-       UCA1TXBUF = readTemp();                  // TX -> RXed character
-
+    //while (ADC10CTL1 & ADC10BUSY);
+    ADC10CTL0&=~ENC;
+    while (ADC10CTL1 & ADC10BUSY);
+    while(!(UCA0TXIFG&IFG2));          // USCI_A0 TX buffer ready?
+    UCA0TXBUF = readTemp();                  // TX -> RXed character
+       //P1OUT ^= BIT0; //flips LED 1
+    ADC10CTL0|=(ENC+ADC10SC);
     TA0CCTL0 &=~BIT0;    //clears flags
-}
-
-unsigned int readTemp(void){
-
-    // ADC Init
-    REFCTL0 &= ~REFMSTR;
-    P6SEL |= BIT2;
-    ADC12CTL0 = ADC12SHT0_9+ADC12ON;
-    ADC12CTL1 = ADC12SHP+ADC12CSTARTADD_2;
-    ADC12MCTL2 = ADC12INCH_2;
-    ADC12CTL0 |= ADC12SC+ADC12ENC;      // start conversion
-    while(ADC12CTL1 & ADC12BUSY);
-    __no_operation();
-
-    return ((ADC12MEM2 >> 4) & 0xFFF);//shift 4 times to get 8 bit without losing most significant bits
 }
 
