@@ -5,11 +5,10 @@
  * main.c
  */
 unsigned int temp[8];
-int tTemp;
-int currentTemp;
+int adcvalue;
 int i = 0;
 
-long linear(long in, long x_min, long x_max, long y_min, long y_max)
+int linear(int in, int x_min, int x_max, int y_min, int y_max)
 {
   return (in - x_min) * (y_max - y_min) / (x_max - x_min) + y_min;
 }
@@ -54,38 +53,49 @@ __interrupt void Timer0_A0_ISR (void){
 
     if(TA0CCR2 != 0)        //if duty cycle is 0 keep output high
         P1OUT &= ~BIT1;
-    currentTemp=tTemp*0.322265625;
 
-    if(1)//green
+    if(1)//red -- low adc
+        {
+            if(adcvalue<20){
+                TA0CCR1=1023;
+            }
+            else if(adcvalue<=400){
+                TA0CCR1=linear(adcvalue, 20, 400, 1023, 0);
+            }
+            else if(adcvalue>350){
+                TA0CCR1=0;
+            }
+
+        }
+    if(1)//green -- mid adc
     {
-        if(currentTemp<=15){
+        if(adcvalue<=200){
             TA0CCR2=0;
         }
-        else if((currentTemp>15)&&(currentTemp<=35)){
-            TA0CCR2 = linear(currentTemp, 15, 35, 1, 1023);
+        else if((adcvalue>250)&&(adcvalue<=500)){
+            TA0CCR2 = linear(adcvalue, 250, 725, 1, 1023);
         }
-        else if(currentTemp>35&&currentTemp<=75){
-            TA0CCR2 = linear(currentTemp, 35, 75, 1023, 0);
+        else if((adcvalue>500)&&(adcvalue<=725)){
+            TA0CCR2 = linear(adcvalue, 500, 725, 1023, 1);
         }
-        else if(currentTemp>75){
+        else if(adcvalue>725){
             TA0CCR2=0;
         }
     }
 
-    if(1)//red
-    {
-        if(currentTemp<45){
-            TA0CCR1=0;
-        }
-        else if(currentTemp>=45){
-            TA0CCR1=linear(currentTemp, 45, 90, 1, 1023);
-        }
-        else if(currentTemp>90){
-            TA0CCR1=1023;
-        }
 
-    }
-
+    if(1) //blue -- high adc
+        {
+            if(adcvalue>850){
+                TA1CCR1=1023;//blue pwm to 100
+            }
+            else if((adcvalue>625)&&(adcvalue<=850)){
+                TA1CCR1= linear(adcvalue, 625, 850, 0, 1023);
+            }
+            else if(adcvalue<=625){
+                TA1CCR1=0;
+            }
+        }
 
     ADC10CTL0 |= ENC + ADC10SC;             // Sampling and conversion start
     TA0CCTL0 &= ~BIT0;    //clears flags
@@ -112,23 +122,11 @@ __interrupt void Timer0_A1_ISR (void){
 /*ISR FOR TIMERA1 CCR0*/
 #pragma vector=TIMER1_A0_VECTOR
 __interrupt void Timer1_A0_ISR (void){
-    if(1) //blue
-    {
-        if(currentTemp<=0){
-            TA1CCR1=1023;//blue pwm to 100
-        }
-        else if(currentTemp>0&&currentTemp<=45){
-            TA1CCR1= linear(currentTemp, 0, 45, 1023, 0);
-        }
-        else if(currentTemp>45){
-            TA1CCR1=0;
-    }
 
     if(TA1CCR1 != 0)          //if duty cycle is 0 keep output high
         P1OUT &= ~BIT2;
 
     TA1CCTL0 &= ~BIT0;    //clears flags
-}
 }
 /*ISR FOR TIMERA1 CCR1 and CCR2*/
 #pragma vector=TIMER1_A1_VECTOR
@@ -152,7 +150,7 @@ void __attribute__ ((interrupt(ADC10_VECTOR))) ADC10_ISR (void)
             temp[i] = ADC10MEM;
             i++;
             if (i==8){
-                tTemp = ((temp[0]+temp[1]+temp[2]+temp[3]+temp[4]+temp[5]+temp[6]+temp[7])>>3);
+                adcvalue = ((temp[0]+temp[1]+temp[2]+temp[3]+temp[4]+temp[5]+temp[6]+temp[7])>>3);
                 i=0;
             }
 }

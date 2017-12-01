@@ -5,13 +5,12 @@
  * main.c
  */
 unsigned int temp[8];
-int tTemp;
-int currentTemp;
+int currentADC;
 int i = 0;
 
-long linear(long in, long x_min, long x_max, long y_min, long y_max)
+int linear(int in, int x_min, int x_max, int y_min, int y_max)
 {
-  return (in - x_min) * (y_max - y_min) / (x_max - x_min) + y_min;
+  return ((in - x_min) * (y_max - y_min) / (x_max - x_min) + y_min);
 }
 
 int main(void)
@@ -42,12 +41,12 @@ int main(void)
         P1SEL1 |= BIT1;
         P1SEL0 |= BIT1;
         ADCCTL0 = ADCSHT_0 + ADCON; // 0 to 3.3 ref, ADC10ON
-        ADCCTL1 = ADCCONSEQ_2+ ADCSHP;// input A1
+        ADCCTL1 = ADCCONSEQ_2+ ADCSHP+ ADCSSEL_2;//+ADCDIV_7;// input A1
         ADCCTL2 = ADCRES_1;
         ADCIE |= ADCIE0;
         ADCMCTL0 |= ADCINCH_1 + ADCSREF_0;
 
-        __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0, interrupts enabled
+                                        __bis_SR_register(LPM0_bits + GIE);       // Enter LPM0, interrupts enabled
 }
 
 /*ISR FOR TIMERB0 CCR0*/
@@ -60,38 +59,47 @@ __interrupt void Timer0_B0_ISR (void){
 
     if(TB0CCR2 != 0)        //if duty cycle is 0 keep output high
         P1OUT &= ~BIT2;
-    currentTemp=tTemp*0.32226;
-
-    if(1)//green
-    {
-        if(currentTemp<=15){
-            TB0CCR2=0;
-        }
-        else if((currentTemp>15)&&(currentTemp<=35)){
-            TB0CCR2 = linear(currentTemp, 15, 35, 1, 1023);
-        }
-        else if(currentTemp>35&&currentTemp<=75){
-            TB0CCR2 = linear(currentTemp, 35, 75, 1023, 0);
-        }
-        else if(currentTemp>75){
-            TB0CCR2=0;
-        }
-    }
 
     if(1)//red
-    {
-        if(currentTemp<45){
-            TB0CCR1=0;
-        }
-        else if(currentTemp>=45){
-            TB0CCR1=linear(currentTemp, 45, 90, 1, 1023);
-        }
-        else if(currentTemp>90){
-            TB0CCR1=1023;
-        }
+            {
+                if(currentADC<45){
+                    TB0CCR1=0;
+                }
+                else if((currentADC>45)&&(currentADC<=200)){
+                    TB0CCR1=linear(currentADC, 45, 200, 0, 1023);
+                }
+                else if(currentADC>200){
+                    TB0CCR1=1023;
+                }
 
-    }
-
+            }
+    if(1)//green
+        {
+            if(currentADC<=15){
+                TB0CCR2=0;
+            }
+            else if((currentADC>15)&&(currentADC<=30)){
+                TB0CCR2 = linear(currentADC, 15, 25, 0 , 1023);
+            }
+            else if(currentADC>30&&currentADC<=50){
+                TB0CCR2 = linear(currentADC, 30, 50, 0, 1023);
+            }
+            else if(currentADC>50){
+                TB0CCR2=0;
+            }
+        }
+        if(1) //blue
+                  {
+                      if(currentADC<=1){
+                          TB1CCR1=1023;//blue pwm to 100
+                      }
+                      else if(currentADC>1&&currentADC<=20){
+                          TB1CCR1= linear(currentADC, 1, 15, 1023, 0);
+                      }
+                      else if(currentADC>20){
+                          TB1CCR1=0;
+                  }
+              }
 
     ADCCTL0 |= ADCENC + ADCSC;             // Sampling and conversion start
     TB0CCTL0 &= ~BIT0;    //clears flags
@@ -118,23 +126,11 @@ __interrupt void Timer0_B1_ISR (void){
 /*ISR FOR TIMERB1 CCR0*/
 #pragma vector=TIMER1_B0_VECTOR
 __interrupt void Timer1_B0_ISR (void){
-    if(1) //blue
-    {
-        if(currentTemp<=0){
-            TB1CCR1=1023;//blue pwm to 100
-        }
-        else if(currentTemp>0&&currentTemp<=45){
-            TB1CCR1= linear(currentTemp, 0, 45, 1023, 0);
-        }
-        else if(currentTemp>45){
-            TB1CCR1=0;
-    }
 
     if(TB1CCR1 != 0)          //if duty cycle is 0 keep output high
         P1OUT &= ~BIT3;
 
     TB1CCTL0 &= ~BIT0;    //clears flags
-}
 }
 /*ISR FOR TIMERB1 CCR1 and CCR2*/
 #pragma vector=TIMER1_B1_VECTOR
@@ -155,10 +151,11 @@ void __attribute__ ((interrupt(ADC_VECTOR))) ADC_ISR (void)
 #error Compiler not supported!
 #endif
 {
+    if((ADCIFG&BIT0)==BIT0)
             temp[i] = ADCMEM0;
             i++;
             if (i==8){
-                tTemp = ((temp[0]+temp[1]+temp[2]+temp[3]+temp[4]+temp[5]+temp[6]+temp[7])>>3);
+                currentADC = ((temp[0]+temp[1]+temp[2]+temp[3]+temp[4]+temp[5]+temp[6]+temp[7])>>3);
                 i=0;
             }
 }
