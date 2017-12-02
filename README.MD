@@ -1,3 +1,5 @@
+# Overview
+This readme is to explan the hardware used in all part of this lab.
 # Hardware
 This lab focused around the ADC and reading values from different sensors. Some sensors in this lab changed resistance or current based on environmental factors. Because of this, external circuitry was used to convert each sensor output to a proportional voltage.
 ## Sensors
