@@ -20,7 +20,7 @@ This is done by going to the receiving data section, setting the data type to bi
 
 ![Alt test](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Visualizing%20Data/fr2311%201.6V.jpg)
 
-![Alt test](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Visualizing%20Data/G2553%201.6V.jpg)
+![Alt test](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Visualizing%20Data/g2553%201.6V.jpg)
 ## Hardware
 To see the hardware around the device, please see the hardware readme.
 
