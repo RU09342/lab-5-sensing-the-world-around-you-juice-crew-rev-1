@@ -5,4 +5,4 @@ A breakout board was designed for the MSP430FR2311 so the processor could be use
 ![pic](http://puu.sh/yxFEa/b2fb488af6.png)
 
 ## BOM
-!(http://www.digikey.com/short/q3vm37)
+http://www.digikey.com/short/q3vm37
