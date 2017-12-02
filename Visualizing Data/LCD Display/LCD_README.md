@@ -1,6 +1,6 @@
 # Overview
 This program is designed to display out the ADC value from 3 different sensors on the MSP430FR6989.
-##Using the LCD Display
+## Using the LCD Display
 A driver library for the FR6989 and the files "hai_LCD.c" and "hai_LCD.h" were used to display out the sensor values. "hai_LCD.c" includes the function showChar which displays out a character.
 This allowed for the ADC values to be displaced on the LCD. 
 The way to display out a character in a specific spot is by setting pos within the function. 
