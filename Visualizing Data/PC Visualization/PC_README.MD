@@ -18,6 +18,9 @@ to wait until the ADC has finished converting to a digital signal.
 MATLAB's Instrument Control Toolbox was used to read from the microprocessors. It was done by opening the toolbox, connecting to the corresponding COM port, then reading the data.
 This is done by going to the receiving data section, setting the data type to binary, the data format to uint8. The data can then be read by clicking read. From here, right click then select export, and when the new window pops up, selection MATLAB Figure Window. The export button produces a graph of the UART values over time. 
 
+![Alt test](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Visualizing%20Data/fr2311%201.6V.jpg)
+
+![Alt test](https://github.com/RU09342/lab-5-sensing-the-world-around-you-juice-crew-rev-1/blob/master/Visualizing%20Data/f5529%201.6V.jpg)
 ## Hardware
 To see the hardware around the device, please see the hardware readme.
 
