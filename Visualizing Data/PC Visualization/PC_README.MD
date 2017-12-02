@@ -25,4 +25,4 @@ This is done by going to the receiving data section, setting the data type to bi
 To see the hardware around the device, please see the hardware readme.
 
 ## Processor selection choices
-The FR2311 G2553 were the only 2 microprocessors used for this lab. This was because the only requirements were an ADC of 8 bit, and UART capability. For this reason, all 5 processors that we had stocked were available for use, but the cost of the FR2311 and G2553 are much lower than the other processors. Besides this, the other processors have no added benefit if the full ADC resolution cannot be used.
+The FR2311 G2553 were the only 2 microprocessors used for this part of the lab. This was because the only requirements were an ADC of 8 bit, and UART capability. For this reason, all 5 processors that we had stocked were available for use, but the cost of the FR2311 and G2553 are much lower than the other processors. Besides this, the other processors have no added benefit if the full ADC resolution cannot be used.
