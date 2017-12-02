@@ -86,7 +86,6 @@ __interrupt void Timer0_A0_ISR (void){
     while (ADC10CTL1 & ADC10BUSY);
     while(!(UCA0TXIFG&IFG2));          // USCI_A0 TX buffer ready?
     UCA0TXBUF = readTemp();                  // TX -> RXed character
-       //P1OUT ^= BIT0; //flips LED 1
     ADC10CTL0|=(ENC+ADC10SC);
     TA0CCTL0 &=~BIT0;    //clears flags
 }

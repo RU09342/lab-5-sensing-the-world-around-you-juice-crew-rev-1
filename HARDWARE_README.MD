@@ -1,16 +1,12 @@
-##Hardware
-###Reading from the photoresistor
-The photo resistor changes resistance based on the level of light it takes in. It was measure to have a minimum voltage of 400 Ohms?
-The microprocessors ADC can be used to obtain a value from this, but it requres hardware surrounding the photoresistor. 
-A resistor divider network was used to get a voltage proportional to the photoresistors resistance. The schematic for this can be seen below
-
-Insert Photo here
-
-Since the photoresistor is placed between the microprocessor and ground, the voltage on the microprocessors input pin is Vin*(Pr/(Pr+240?))
-This is assuming that the input current to the microprocessor is neglagable.
-A 240? Ohm resistor was used to limit the current throught the photoresistor. It was assumed that the photoresistor a current limit slightly above 1mA.****
-
-###Reading from 
-
-###Reading from the temperature sensor
-The temperature sensor used was the LM35. This directly outputs a voltage based on the temperature.
+#Hardware
+This lab focused around the ADC and reading values from different sensors. Some sensors in this lab changed resistance or current based on environmental factors. Because of this, external circuitry was used to convert each sensor output to a proportional voltage.
+##Sensors
+This lab used three sensors: a temperature sensor (LM35), a phototransistor (OP805SL), and a photoresistor (part number not listed). The following sections will describe the circuitry used for each of these sensors.
+##Temperature Sensor
+The LM35 needed no external circuitry. It can produce an output directly from the 5V onboard supply and ground. Because the LM35 requires 4V or more, the G2553 cannot be used with this directly unless there is an external power supply. 
+##Phototransistor
+The OP805SL differs slightly from other Phototransistors because it has a pin for its base. The reason why most phototransistors have 2 pins is that the purpose changes with respect to light rather than input current.
+###Photoresistor
+The photoresistor has no part number. To check the device characteristics the range of the photoresistor was measured. The resistance had a range between 300Ohms and 1.3Mohms. Because the device had no datasheet, it was assumed that the photo resistor had a maximum current around 5 mA, to be on the safe side of things. The circuit used a 11kohm resistor in series with the photo resistor to generate the output. 
+##LED
+A common anode RGB LED was used for lab. Although it is less intuitive, this LED had better color accuracy compared to other common cathode LEDs on hand.

@@ -86,14 +86,15 @@ __interrupt void Timer0_A0_ISR (void){
 
     if(1) //blue -- high adc
         {
-            if(adcvalue>850){
+            if(adcvalue<=625){
+                        TA1CCR1=0;
+
+            }
+            else if((adcvalue>650)&&(adcvalue<=850)){
+                TA1CCR1= linear(adcvalue, 650, 850, 0, 1023);
+            }
+            else if(adcvalue>850){
                 TA1CCR1=1023;//blue pwm to 100
-            }
-            else if((adcvalue>625)&&(adcvalue<=850)){
-                TA1CCR1= linear(adcvalue, 625, 850, 0, 1023);
-            }
-            else if(adcvalue<=625){
-                TA1CCR1=0;
             }
         }
 

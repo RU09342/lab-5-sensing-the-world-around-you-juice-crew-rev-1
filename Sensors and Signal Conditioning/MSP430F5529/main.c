@@ -85,7 +85,6 @@ __interrupt void Timer0_A0_ISR (void){
 unsigned int readTemp(void){
 
     // ADC Init
-    REFCTL0 &= ~REFMSTR;
     P6SEL |= BIT2;
     ADC12CTL0 = ADC12SHT0_9+ADC12ON;
     ADC12CTL1 = ADC12SHP+ADC12CSTARTADD_2;
