@@ -2,7 +2,7 @@
 This code works by communicating sensor data over UART with MATLAB using MATLAB's Serial function.
 
 ## Configuring UART
-The UART on each board was configured to be at 9600, which is based on the default communication baud rate on computers.
+The UART on each board was configured to be at 9600 baud, which is based on the default communication baud rate on computers.
 One limitation of UART was that the full resolution of the ADC was not used due to only 8 bits of the sensor data being sent at once through UART.
 Because of this, the ADC value had to be shifted right twice which lost 2 bits of resolution.
 
